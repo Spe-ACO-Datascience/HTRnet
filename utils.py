@@ -5,4 +5,8 @@ def extractImageCategory(fullCat):
     return extract[0]
 
 
+def showRequest(request):
+    for el in request:
+        print(el)
+
 # print("point".split("("))

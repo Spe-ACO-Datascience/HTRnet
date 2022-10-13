@@ -1,4 +1,5 @@
 import sqlite3 as sq
+from utils import *
 
 
 # CONNECTION À LA BASE DE DONNÉE SQLITE
@@ -33,6 +34,14 @@ def selectImagesOfInd(name):
     )
 
 
+def selectAllImagesByCat(cat):
+    return cursor.execute(
+        "SELECT i.imagePath, c.categoryName FROM images as i INNER JOIN labels as l ON l.image_id = i.id INNER JOIN categories as c ON c.id = l.category_id WHERE c.categoryName LIKE ?",
+        ['%'+cat+'%']
+    )
+
+
+allA = selectAllImagesByCat("(A)")
+showRequest(allA)
+
 norroyImages = selectImagesOfInd("norroy")
-for i in norroyImages:
-    print(i[1])
