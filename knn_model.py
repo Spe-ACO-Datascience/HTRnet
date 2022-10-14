@@ -77,3 +77,20 @@ predictions = testModelForEachCat(knn_model, categories[0:-2], y_test, X_test, p
 
 ### Optimize ###
 
+from sklearn.model_selection import cross_val_score
+
+scores = []
+
+for k in range(1,11):
+    print(k)
+    model = KNeighborsClassifier(n_neighbors=k)
+    scores.append(np.mean(cross_val_score(model, x_reshape, y_np, cv=5)))
+    
+ 
+import matplotlib.pyplot as plt
+
+abscisse = [i for i in range(1, len(scores)+1)]
+
+plt.plot(abscisse, scores)
+plt.show()
+
