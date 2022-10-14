@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 from sklearn.model_selection import train_test_split
+import random
 # images = selectImages(10)
 # for i in images:
 #     img = cv2.imread(i[0])
@@ -17,11 +18,17 @@ from sklearn.model_selection import train_test_split
 # Get All categories
 categories = [el for el in selectAllCategories()]
 
+#on retire la ligne espace en plus et l'apostrophe qui n'apparaît qu'une seule fois
+
+categories = categories[0:-2]
+
 # chaque catégorie est une liste de tupple
 allDataInformations = {
     cat[1]: [el for el in selectAllImagesByCat(cat[1])] for cat in categories
 }
 # print(len(allDataInformations["(A)"]))
+
+allDataInformations["(*) espace"] = random.choices(allDataInformations["(*) espace"], k=50)
 
 names = list(allDataInformations.keys())
 values = list(allDataInformations.values())
@@ -89,7 +96,9 @@ def createDataSet(DataDictionnary):
 x, y = createDataSet(allDataInformations)
 
 x_np = np.array(x)
+
 y_np = np.array(y)
+
 
 #show an image of dataset
 plt.imshow(x[567], cmap="gray")
@@ -124,20 +133,5 @@ X_train, X_test, y_train, y_test = train_test_split(x_reshape, y_np, test_size=0
 
 # predict = svm_model.predict(X_test)
 
-##### KNN #####
-
-from sklearn.neighbors import KNeighborsClassifier
-
-knn_model = KNeighborsClassifier(n_neighbors=3)
-
-knn_model.fit(X_train, y_train)
-
-
-predic = knn_model.predict(X_test)
-
-
-from sklearn.metrics import ConfusionMatrixDisplay
-
-ConfusionMatrixDisplay.from_estimator(knn_model, X_test, y_test)
 
 
