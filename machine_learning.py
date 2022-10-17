@@ -90,7 +90,12 @@ def createDataSet(DataDictionnary):
             img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             dataset_x.append(img)
             dataset_y.append(imgInfo[1])
-    return dataset_x, dataset_y
+    
+    x_np = np.array(dataset_x)
+    y_np = np.array(dataset_y)
+    n_samples = len(x_np)
+    x_reshape = x_np.reshape((n_samples, -1))
+    return x_reshape, y_np
 
 
 x, y = createDataSet(allDataInformations)
