@@ -94,3 +94,52 @@ abscisse = [i for i in range(1, len(scores)+1)]
 plt.plot(abscisse, scores)
 plt.show()
 
+""" Conclusion de ce premier essai avec un nombre d'espace tronqué: 
+    Les prédictions ne sont pas bonnes dans tous les cas, est-ce qu'il y a trop de classe
+    par rapport au nombre de données ? 
+    
+    Test suivant : ne faire les tests que sur un certain nombre de lettre
+
+"""
+
+onlyFiveLettersDictionnary = {
+    cat[1]: [el for el in selectAllImagesByCat(cat[1])] for cat in categories[0:4]
+    }
+
+x_five, y_five = createDataSet(onlyFiveLettersDictionnary)
+
+
+x_five_np = np.array(x_five)
+y_five_np = np.array(y_five)
+
+n_five_samples = len(x_five_np)
+x_five_reshape = x_five_np.reshape((n_five_samples, -1))
+
+scores = []
+
+#model_five = KNeighborsClassifier(n_neighbors=3)
+#scores_five = cross_val_score(model, x_five_reshape, y_five_np, cv=2)
+
+X_train_f, X_test_f, y_train_f, y_test_f = train_test_split(x_five_reshape, y_five_np, test_size=0.33, random_state=2, shuffle=True)
+
+for k in range(1,11):
+    print(k)
+    model = KNeighborsClassifier(n_neighbors=k)
+    scores.append(np.mean(cross_val_score(model, x_five_reshape, y_five_np, cv=5)))
+    
+ 
+import matplotlib.pyplot as plt
+
+abscisse = [i for i in range(1, len(scores)+1)]
+
+plt.plot(abscisse, scores)
+plt.show()
+
+# si on prend 3 voisins 
+
+knn_3_five = KNeighborsClassifier(n_neighbors=2)
+
+knn_3_five.fit(X_train_f, y_train_f)
+
+
+ConfusionMatrixDisplay.from_estimator(knn_3_five, X_test_f, y_test_f)

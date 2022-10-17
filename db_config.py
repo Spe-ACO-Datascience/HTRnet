@@ -41,7 +41,7 @@ def selectAllImagesByCat(cat):
     )
 
 
-allA = selectAllImagesByCat("(A)")
-showRequest(allA)
+# allA = selectAllImagesByCat("(A)")
+# showRequest(allA)
 
-norroyImages = selectImagesOfInd("norroy")
+# norroyImages = selectImagesOfInd("norroy")
