@@ -81,7 +81,8 @@ def createDataSet(DataDictionnary):
         for imgInfo in DataDictionnary[category]:
             path = imgInfo[0].replace('\\', '/')
             img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-            dataset_x.append(img)
+            resized_image = cv2.resize(img , (28, 28))
+            dataset_x.append(resized_image)
             dataset_y.append(imgInfo[1])
     return dataset_x, dataset_y
 
