@@ -130,3 +130,46 @@ for i in range(len(test_X)):
 # faire un dataset test avec les images organisées 
 print("".join(sentence)) 
 
+
+''' 
+Visualisatio of intermediate representations
+'''
+from keras.models import Model
+img = test_X[12]
+img = img.reshape(1,train_x.shape[1],train_x.shape[2],1)
+
+layer_name = 'conv2d_26'
+intermediate_layer_model = Model(inputs=model.input,
+                                          outputs=model.get_layer(layer_name).output)
+intermediate_output = intermediate_layer_model.predict(img)
+import matplotlib.pyplot as plt
+import numpy as np ## to reshape
+%matplotlib inline
+temp = intermediate_output.reshape(28,28,1) # 2 feature
+plt.imshow(temp[:,:,2],cmap='gray') 
+# note that output should be reshape in 3 dimension
+
+
+
+from keras import backend as K
+
+# with a Sequential model
+get_3rd_layer_output = K.function([model.layers[0].input],
+                                  [model.layers[2].output])
+layer_output = get_3rd_layer_output([img])[0] ## pass as input image
+
+'''
+Validation on the test set
+'''
+# Pas encore sûre de cette partie 
+from sklearn.metrics import confusion_matrix
+y_proba = model.predict(test_X)
+C = []
+for i in range(len(y_proba)):
+    #print(i)
+    C.append(list(word_dict.keys())[np.argmax(y_proba[i])] )
+print(C)
+M = confusion_matrix(y_test,C)
+print("Confusion matrix")
+print(M)
+print("Classification error: ", np.round((1-np.sum(np.diag(M))/np.shape(test_X)[0])*100,2),"%")
