@@ -19,12 +19,17 @@ def RandomForest_Model(x, y, nbreTree, minDepth, maxDepth, minSplit, maxSplit, n
     splits = []
     depths = []
     
+    print("--- split data set into train and test --- ")
+    
+    X_train, X_test, y_train, y_test = train_test_split(
+        x, y, test_size=0.33, random_state=2, shuffle=True)
+    
     print("--- start cross validation Random Forest --- ")
     
     for split in range(minSplit, maxSplit+1):
         for depth in range(minDepth, maxDepth+1):
-            model = RandomForestClassifier(max_depth=depth, min_samples_split=split)
-            mean_score = np.mean(cross_val_score(model, x, y, cv=nbreCV, scoring=metric))
+            model = RandomForestClassifier(n_estimators=nbreTree, max_depth=depth, min_samples_split=split)
+            mean_score = np.mean(cross_val_score(model, X_train, y_train, cv=nbreCV, scoring=metric))
             print("---")
             print(f"--- {metric} moyenne pour split = {split} et depth = {depth} ---")
             print(mean_score)
@@ -44,9 +49,6 @@ def RandomForest_Model(x, y, nbreTree, minDepth, maxDepth, minSplit, maxSplit, n
     
     print(f"--- La meilleur {metric} est {best_accuracy} --- ")
     print(f" Pour split = {best_split} et depth = {best_depth}")
-    
-    X_train, X_test, y_train, y_test = train_test_split(
-        x, y, test_size=0.33, random_state=2, shuffle=True)
     
     best_model = RandomForestClassifier(max_depth=best_depth, min_samples_split=best_split)
     

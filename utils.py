@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from sklearn.metrics import ConfusionMatrixDisplay
+import random
 
 from db_config import *
 
@@ -17,11 +18,14 @@ def showRequest(request):
 
 # print("point".split("("))
 
-def createDataSet(categories):
+def createDataSet(categories, troncSpace=None):
     
     DataDictionnary = {
         cat[1]: [el for el in selectAllImagesByCat(cat[1])] for cat in categories
     }
+    
+    if(troncSpace):
+        DataDictionnary["(*) espace"] = random.choices(DataDictionnary["(*) espace"], k=troncSpace)
     
     dataset_x = []
     dataset_y = []
