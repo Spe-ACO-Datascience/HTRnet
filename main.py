@@ -23,6 +23,7 @@ from db_config import *
 
 from KNN import KNN_Model
 from RF import RandomForest_Model
+from neural_network import NN_Model 
 
 ### Premiers test avec le data set complet ### 
 """ On retire les deux dernières colonnes qui sont un doublon des espaces et l'apostrophe
@@ -252,9 +253,38 @@ Bien meilleur résultats : (attention tout de même à l'over fitting mais à ch
 """
 
 
+"""
+Deep learning method 
+"""
+# Sur le dataset complet 
 
+NN_Model(X_train_all, X_test_all, y_train_all, y_test_all)
 
+"""
+The validation accuracy is : [0.46915584802627563]
+The training accuracy is : [0.43182727694511414]
+The validation loss is : [1.8632093667984009]
+The training loss is : [3.420698881149292]
+Classification error:  53.08 %
+"""
 
+# Sur le dataset resampled 
+NN_Model(x_resampled, X_test_all, y_resampled, y_test_all)
 
+"""
+The validation accuracy is : [0.5689935088157654]
+The training accuracy is : [0.1520247608423233]
+The validation loss is : [1.5406628847122192]
+The training loss is : [2.8868353366851807]
+Classification error:  43.1 %
+"""
 
+NN_Model(x_resampled_cut_space, X_test_all, y_resampled_cut_space, y_test_all)
 
+"""
+The validation accuracy is : [0.4642857015132904]
+The training accuracy is : [0.07636450976133347]
+The validation loss is : [1.9020476341247559]
+The training loss is : [3.236750841140747]
+Classification error:  53.57 %
+"""

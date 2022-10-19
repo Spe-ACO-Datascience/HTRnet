@@ -22,7 +22,7 @@ from sklearn.metrics import confusion_matrix
 
 
 
-def NN_model(train_x, test_x, train_y, test_y):  
+def NN_Model(train_x, test_x, train_y, test_y):  
 
     '''
     Reshaping the data so that it can be displayed as an image
@@ -99,46 +99,44 @@ def NN_model(train_x, test_x, train_y, test_y):
     C = []
     for i in range(len(y_proba)):
         C.append(list(word_dict.keys())[np.argmax(y_proba[i])] )
-    print(C)
     M = confusion_matrix(test_y,C)
     print("Confusion matrix")
     print(M)
     print("Classification error: ", np.round((1-np.sum(np.diag(M))/np.shape(test_X)[0])*100,2),"%")
 
-NN_model(X_train, X_test, y_train, y_test)
 
 
-'''
-Doing Some Predictions on Test Data
-'''
-# Representation on pictures 
-fig, axes = plt.subplots(1010, figsize=(8,9))
-axes = axes.flatten()
+# '''
+# Doing Some Predictions on Test Data
+# '''
+# # Representation on pictures 
+# fig, axes = plt.subplots(1010, figsize=(8,9))
+# axes = axes.flatten()
 
-for i,ax in enumerate(axes):
-    img = np.reshape(test_X[i], (28,28))
-    ax.imshow(img, cmap="Greys")
+# for i,ax in enumerate(axes):
+#     img = np.reshape(test_X[i], (28,28))
+#     ax.imshow(img, cmap="Greys")
     
-    pred = list(word_dict.keys())[np.argmax(test_yOHE[i])]    
-    ax.set_title("Prediction: "+pred)
-    ax.grid()
+#     pred = list(word_dict.keys())[np.argmax(test_yOHE[i])]    
+#     ax.set_title("Prediction: "+pred)
+#     ax.grid()
 
-# Get a sentence for each sentence  
-sentence = []
-for i in range(len(test_X)):
-    img = np.reshape(test_X[i], (28,28))
+# # Get a sentence for each sentence  
+# sentence = []
+# for i in range(len(test_X)):
+#     img = np.reshape(test_X[i], (28,28))
     
-    pred = list(word_dict.keys())[np.argmax(test_yOHE[i])] 
-    letter = str(pred)
-    if len(letter)==3:
-        letter = letter[1]
-    elif len(letter) == 10:
-        letter = " "
-    else :
-        letter = "."
-    number = int(i)
-    sentence.append(letter)
-# Affiche la phase, même si ca n'a pas vraiment de sens pour l'instant
-# faire un dataset test avec les images organisées 
-print("".join(sentence)) 
+#     pred = list(word_dict.keys())[np.argmax(test_yOHE[i])] 
+#     letter = str(pred)
+#     if len(letter)==3:
+#         letter = letter[1]
+#     elif len(letter) == 10:
+#         letter = " "
+#     else :
+#         letter = "."
+#     number = int(i)
+#     sentence.append(letter)
+# # Affiche la phase, même si ca n'a pas vraiment de sens pour l'instant
+# # faire un dataset test avec les images organisées 
+# print("".join(sentence)) 
 
