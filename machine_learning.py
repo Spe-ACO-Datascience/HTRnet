@@ -1,3 +1,9 @@
+"""
+Ceci est un fichier test, il ne sert à rien de le consulter
+
+"""
+
+
 from db_config import *
 from utils import *
 import cv2
