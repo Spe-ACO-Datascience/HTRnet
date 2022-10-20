@@ -49,8 +49,6 @@ best_random_forest_model = RandomForest_Model(
 
 best_SVC_model = SVC_Model(x_all, y_all, nbreCV=5, C_min=1, nb_C=2)
 
-best_categoricalNB_model = CategoricalNB_model(
-    x_all, y_all, nbreCV=5, alpha_min=0.1, nb_alpha=2)
 #### Création des dataset train et test ####
 
 X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(
