@@ -137,6 +137,16 @@ best_knn_model_resample = KNN_Model(x_resampled_cut_space, y_resampled_cut_space
 
 best_random_forest_model_resample = RandomForest_Model(x_resampled_cut_space, y_resampled_cut_space, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
 
+best_svc_model_resample =  SVC_Model(x_resampled_cut_space, y_resampled_cut_space, nbreCV = 5 , C_min=1 , nb_C =2)
+
+predictions = best_svc_model_resample.predict(X_test_all)
+cm = confusion_matrix(y_test_all, predictions, labels=best_svc_model_resample.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=best_svc_model_resample.classes_)
+disp.plot()
+plt.show()
+acc= accuracy_score(y_test_all,predictions)
+print(acc)
+testModelForEachCat(best_svc_model_resample, all_categories, y_resampled_cut_space, x_resampled_cut_space, plot = True)
 
 """
 Pour des k compris entre 1 et 5, l'accuracy est très élevée (proche de 1), à voir s'il faut augmenter le nombre de k ou pas, très bonne prédiction, mais
@@ -299,3 +309,26 @@ The validation loss is : [1.9020476341247559]
 The training loss is : [3.236750841140747]
 Classification error:  53.57 %
 """
+
+"""
+Test avec des labels ordonnés qui forment une phrase
+Renvoie la phrase dans un fichier texte 
+"""
+index_label = [205,17,16,3,373,1,40,16,4,16,40,1,4,48,374,1,57,37,16,3,2,40,179,3,40,90]
+X_test_ordonnated = [X_test_all[i] for i in index_label]
+def from_pred_to_text (X_test_ordonnated):
+    pred_X_test_ordonnated = best_svc_model_resample.predict(X_test_ordonnated) 
+    sentence = []
+    for i in range(len(pred_X_test_ordonnated)):
+        if len(pred_X_test_ordonnated[i])==3:
+            letter = pred_X_test_ordonnated[i][1]
+        elif len(pred_X_test_ordonnated[i]) == 10:
+            letter = " "
+        else :
+            letter = "."
+        sentence.append(letter)
+    # Renvoie la phrase dans un fichier texte 
+    with open('sentence.txt', 'a') as f:
+        f.write(''.join(sentence))
+
+from_pred_to_text(X_test_ordonnated)
