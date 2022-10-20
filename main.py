@@ -21,9 +21,11 @@ from sklearn.model_selection import train_test_split
 from utils import *
 from db_config import *
 
+
 from KNN import KNN_Model
 from RF import RandomForest_Model
 from neural_network import NN_Model 
+from Linear_SVC import SVC_Model
 
 ### Premiers test avec le data set complet ### 
 """ On retire les deux dernières colonnes qui sont un doublon des espaces et l'apostrophe
@@ -45,7 +47,9 @@ best_knn_model = KNN_Model(x_all, y_all, 10, 15, 'accuracy')
 
 best_random_forest_model = RandomForest_Model(x_all, y_all, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
 
+best_SVC_model = SVC_Model(x_all,y_all, nbreCV = 5 , C_min=1 ,nb_C =2)
 
+best_categoricalNB_model = CategoricalNB_model(x_all,y_all,nbreCV = 5,alpha_min = 0.1 , nb_alpha = 2)
 #### Création des dataset train et test ####
 
 X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(x_all, y_all, test_size=0.33, random_state=2, shuffle=True)
@@ -55,6 +59,8 @@ X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(x_all, y_all
 testModelForEachCat(best_knn_model, all_categories, y_test_all, X_test_all, plot=True)
 
 testModelForEachCat(best_random_forest_model, all_categories, y_test_all, X_test_all, plot=True)
+
+testModelForEachCat(best_SVC_model, all_categories, y_test_all, X_test_all, plot=True)
 
 """ Premières conclusions : 
     
@@ -92,6 +98,8 @@ best_knn_model_cut_space = KNN_Model(x_cut_space, y_cut_space, 10, 15, 'accuracy
 
 best_random_forest_model_cut_space = RandomForest_Model(x_cut_space, y_cut_space, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
 
+best_SVC_model_cut_space = SVC_Model(x_cut_space, y_cut_space, nbreCV = 5 , C_min=1 ,nb_C =2)
+
 """ 
 
     Conclusion, ça ne marche pas mieux, la plupart des lettres sont toujours prédites comme des espaces
@@ -111,6 +119,9 @@ x_resampled, y_resampled = smote_enn.fit_resample(x_all, y_all)
 best_knn_model_resample = KNN_Model(x_resampled, y_resampled, nbre_cv=10, k_max= 5, metric = 'accuracy')
 
 best_random_forest_model_resample = RandomForest_Model(x_resampled, y_resampled, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
+
+best_svc_model_resample =  SVC_Model(x_resampled, y_resampled, nbreCV = 5 , C_min=1 , nb_C =2)
+
 
 """
 Temps de calcul très long pour les modèles, car nombre de données beaucoup trop grand
