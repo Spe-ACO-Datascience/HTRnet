@@ -13,28 +13,29 @@ Script principal du projet
 
 ### Importations ###
 
-#### Librairie
-from sklearn.model_selection import train_test_split
+# Librairie
 
-#### Nos fonctions : 
-    
-from utils import *
-from db_config import *
+# Nos fonctions :
 
-from KNN import KNN_Model
-from RF import RandomForest_Model
-from neural_network import NN_Model 
 
-### Premiers test avec le data set complet ### 
+### Premiers test avec le data set complet ###
 """ On retire les deux dernières colonnes qui sont un doublon des espaces et l'apostrophe
     pour lequel il n'y a qu'une seule donnée. 
 """
 
+from imblearn.combine import SMOTEENN
+from Linear_SVC import SVC_Model
+from sklearn.model_selection import train_test_split
+from utils import *
+from db_config import *
+from KNN import KNN_Model
+from RF import RandomForest_Model
+from neural_network import NN_Model
 all_categories = [el for el in selectAllCategories()][0:-2]
 
 x_all, y_all = createDataSet(all_categories)
 
-#### Résultats obtenus pour les différents modèles #### 
+#### Résultats obtenus pour les différents modèles ####
 
 """ 
 Toutes les fonctions d'entraînement des modèles font de la cross-validation et le cas 
@@ -43,18 +44,28 @@ Toutes les fonctions d'entraînement des modèles font de la cross-validation et
 
 best_knn_model = KNN_Model(x_all, y_all, 10, 15, 'accuracy')
 
-best_random_forest_model = RandomForest_Model(x_all, y_all, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
+best_random_forest_model = RandomForest_Model(
+    x_all, y_all, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric="accuracy")
 
+best_SVC_model = SVC_Model(x_all, y_all, nbreCV=5, C_min=1, nb_C=2)
 
+best_categoricalNB_model = CategoricalNB_model(
+    x_all, y_all, nbreCV=5, alpha_min=0.1, nb_alpha=2)
 #### Création des dataset train et test ####
 
-X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(x_all, y_all, test_size=0.33, random_state=2, shuffle=True)
+X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(
+    x_all, y_all, test_size=0.33, random_state=2, shuffle=True)
 
 #### Matrice de confusion pour chaque catégorie de lettre, par modèle ####
 
-testModelForEachCat(best_knn_model, all_categories, y_test_all, X_test_all, plot=True)
+testModelForEachCat(best_knn_model, all_categories,
+                    y_test_all, X_test_all, plot=True)
 
-testModelForEachCat(best_random_forest_model, all_categories, y_test_all, X_test_all, plot=True)
+testModelForEachCat(best_random_forest_model, all_categories,
+                    y_test_all, X_test_all, plot=True)
+
+testModelForEachCat(best_SVC_model, all_categories,
+                    y_test_all, X_test_all, plot=True)
 
 """ Premières conclusions : 
     
@@ -88,9 +99,14 @@ testModelForEachCat(best_random_forest_model, all_categories, y_test_all, X_test
 
 x_cut_space, y_cut_space = createDataSet(all_categories, troncSpace=1000)
 
-best_knn_model_cut_space = KNN_Model(x_cut_space, y_cut_space, 10, 15, 'accuracy')
+best_knn_model_cut_space = KNN_Model(
+    x_cut_space, y_cut_space, 10, 15, 'accuracy')
 
-best_random_forest_model_cut_space = RandomForest_Model(x_cut_space, y_cut_space, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
+best_random_forest_model_cut_space = RandomForest_Model(
+    x_cut_space, y_cut_space, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric="accuracy")
+
+best_SVC_model_cut_space = SVC_Model(
+    x_cut_space, y_cut_space, nbreCV=5, C_min=1, nb_C=2)
 
 """ 
 
@@ -102,15 +118,20 @@ best_random_forest_model_cut_space = RandomForest_Model(x_cut_space, y_cut_space
 
 ## Test de ressampling avec SMOTEENN ##
 
-from imblearn.combine import SMOTEENN
 
 smote_enn = SMOTEENN(random_state=0)
 x_resampled, y_resampled = smote_enn.fit_resample(x_all, y_all)
 
 
-best_knn_model_resample = KNN_Model(x_resampled, y_resampled, nbre_cv=10, k_max= 5, metric = 'accuracy')
+best_knn_model_resample = KNN_Model(
+    x_resampled, y_resampled, nbre_cv=10, k_max=5, metric='accuracy')
 
-best_random_forest_model_resample = RandomForest_Model(x_resampled, y_resampled, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
+best_random_forest_model_resample = RandomForest_Model(
+    x_resampled, y_resampled, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric="accuracy")
+
+best_svc_model_resample = SVC_Model(
+    x_resampled, y_resampled, nbreCV=5, C_min=1, nb_C=2)
+
 
 """
 Temps de calcul très long pour les modèles, car nombre de données beaucoup trop grand
@@ -119,12 +140,15 @@ Essayons avec un nombre d'espace réduit, pour avoir un jeu de données plus pet
 
 """
 smote_enn_cut_space = SMOTEENN(random_state=0)
-x_resampled_cut_space, y_resampled_cut_space = smote_enn_cut_space.fit_resample(x_cut_space, y_cut_space)
+x_resampled_cut_space, y_resampled_cut_space = smote_enn_cut_space.fit_resample(
+    x_cut_space, y_cut_space)
 
 
-best_knn_model_resample = KNN_Model(x_resampled_cut_space, y_resampled_cut_space, nbre_cv=10, k_max= 5, metric = 'accuracy')
+best_knn_model_resample = KNN_Model(
+    x_resampled_cut_space, y_resampled_cut_space, nbre_cv=10, k_max=5, metric='accuracy')
 
-best_random_forest_model_resample = RandomForest_Model(x_resampled_cut_space, y_resampled_cut_space, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric= "accuracy")
+best_random_forest_model_resample = RandomForest_Model(
+    x_resampled_cut_space, y_resampled_cut_space, nbreTree=100, minDepth=2, maxDepth=4, minSplit=3, maxSplit=5, nbreCV=5, metric="accuracy")
 
 
 """
@@ -181,7 +205,8 @@ Pour les random forest, on peut constater quelque chose d'intéressant, quelque 
 
 #### Meilleure optimisation des random forest ####
 
-rf_model = RandomForest_Model(x_resampled_cut_space, y_resampled_cut_space, nbreTree=100, minDepth=4, maxDepth=10, minSplit=4, maxSplit=5, nbreCV=5, metric= "accuracy")
+rf_model = RandomForest_Model(x_resampled_cut_space, y_resampled_cut_space, nbreTree=100,
+                              minDepth=4, maxDepth=10, minSplit=4, maxSplit=5, nbreCV=5, metric="accuracy")
 
 
 """
@@ -256,7 +281,7 @@ Bien meilleur résultats : (attention tout de même à l'over fitting mais à ch
 """
 Deep learning method 
 """
-# Sur le dataset complet 
+# Sur le dataset complet
 
 NN_Model(X_train_all, X_test_all, y_train_all, y_test_all)
 
@@ -268,7 +293,7 @@ The training loss is : [3.420698881149292]
 Classification error:  53.08 %
 """
 
-# Sur le dataset resampled 
+# Sur le dataset resampled
 NN_Model(x_resampled, X_test_all, y_resampled, y_test_all)
 
 """
