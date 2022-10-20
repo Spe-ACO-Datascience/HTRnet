@@ -51,19 +51,15 @@ best_SVC_model = SVC_Model(x_all, y_all, nbreCV=5, C_min=1, nb_C=2)
 
 #### Création des dataset train et test ####
 
-X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(
-    x_all, y_all, test_size=0.33, random_state=2, shuffle=True)
+X_train_all, X_test_all, y_train_all, y_test_all = train_test_split(x_all, y_all, test_size=0.33, random_state=2, shuffle=True)
 
 #### Matrice de confusion pour chaque catégorie de lettre, par modèle ####
 
-testModelForEachCat(best_knn_model, all_categories,
-                    y_test_all, X_test_all, plot=True)
+testModelForEachCat(best_knn_model, all_categories, y_test_all, X_test_all, title="KNN", plot=False)
 
-testModelForEachCat(best_random_forest_model, all_categories,
-                    y_test_all, X_test_all, plot=True)
+testModelForEachCat(best_random_forest_model, all_categories, y_test_all, X_test_all, plot=True)
 
-testModelForEachCat(best_SVC_model, all_categories,
-                    y_test_all, X_test_all, plot=True)
+testModelForEachCat(best_SVC_model, all_categories, y_test_all, X_test_all, plot=True)
 
 """ Premières conclusions : 
     
