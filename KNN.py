@@ -22,7 +22,7 @@ def KNN_Model(x, y, nbre_cv, k_max, metric):
     scores = []  # tableau des accuracy pour chaque k
 
     print("--- Cross validation pour les KNN --- ")
-    for k in range(1, k_max+1):
+    for k in range(2, k_max+1):
         model = KNeighborsClassifier(n_neighbors=k)
         mean_score = np.mean(cross_val_score(model, X_train, y_train, cv=nbre_cv, scoring=metric))
         print("---")
@@ -57,8 +57,9 @@ def KNN_Model(x, y, nbre_cv, k_max, metric):
     disp = ConfusionMatrixDisplay(
         confusion_matrix=cm, display_labels=best_model.classes_)
 
+    plt.xticks(rotation=90)
     disp.plot()
-
+    
     plt.show()
 
     return best_model

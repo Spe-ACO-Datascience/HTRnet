@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from sklearn.metrics import ConfusionMatrixDisplay
 import random
+import matplotlib.pyplot as plt
 
 from db_config import *
 
@@ -58,3 +59,12 @@ def testModelForEachCat(model, catList, yTest, XTest, plot=False):
         if(plot):
             ConfusionMatrixDisplay.from_estimator(model, x,y)
     return predictions
+
+
+def plotNumberOfOccurenciesByClasses(y):
+    labels = np.unique(y)
+    nbre_rs = [y[y == cat].shape[0] for cat in labels]
+
+    plt.bar(range(len(labels)), nbre_rs, tick_label=labels)
+    plt.xticks(rotation=90)
+    plt.show()

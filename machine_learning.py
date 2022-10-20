@@ -28,7 +28,7 @@ allDataInformations = {
 }
 # print(len(allDataInformations["(A)"]))
 
-allDataInformations["(*) espace"] = random.choices(allDataInformations["(*) espace"], k=50)
+#allDataInformations["(*) espace"] = random.choices(allDataInformations["(*) espace"], k=50)
 
 names = list(allDataInformations.keys())
 values = list(allDataInformations.values())
@@ -41,6 +41,13 @@ plt.bar(range(len(allDataInformations)), nbre, tick_label=names)
 plt.xticks(rotation=90)
 plt.show()
 
+
+labels = np.unique(y_train_resampled)
+nbre_rs = [y_train_resampled[y_train_resampled == cat].shape[0] for cat in labels]
+
+plt.bar(range(len(labels)), nbre_rs, tick_label=labels)
+plt.xticks(rotation=90)
+plt.show()
 
 ## Letters only
 

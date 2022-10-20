@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score
 import matplotlib.pyplot as plt
 
 def RandomForest_Model(x, y, nbreTree, minDepth, maxDepth, minSplit, maxSplit, nbreCV, metric):
@@ -47,20 +47,23 @@ def RandomForest_Model(x, y, nbreTree, minDepth, maxDepth, minSplit, maxSplit, n
     best_split = splits[best_accuracy_index]
     best_depth = depths[best_accuracy_index]
     
-    print(f"--- La meilleur {metric} est {best_accuracy} --- ")
-    print(f" Pour split = {best_split} et depth = {best_depth}")
-    
     best_model = RandomForestClassifier(max_depth=best_depth, min_samples_split=best_split)
     
     best_model.fit(X_train, y_train)
 
-    predictions = best_model.predict(X_test)
+    predictions = best_model.predict(X_test)   
+    
+    accuracy_final = accuracy_score(y_test, predictions)
+    
+    print("--- Accuracy du meilleur modèle  ---")
+    print(f"{accuracy_final}")
 
     cm = confusion_matrix(y_test, predictions, labels=best_model.classes_)
 
     disp = ConfusionMatrixDisplay(
         confusion_matrix=cm, display_labels=best_model.classes_)
 
+    plt.xticks(rotation=90)
     disp.plot()
 
     plt.show()
